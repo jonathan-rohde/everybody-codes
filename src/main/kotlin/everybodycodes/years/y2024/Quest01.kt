@@ -46,18 +46,19 @@ private fun Char.getPotions() : Int {
 }
 
 private fun String.getPotions() : Int {
-    if (length == 1) {
-       return this[0].getPotions()
-    } else if (length == 2) {
-        if (contains("x")) {
-            return replace("x", "").getPotions()
-        }
-        return this[0].getPotions() + this[1].getPotions() + 2
-    } else if (length == 3) {
-        if (contains("x")) {
-            return replace("x", "").getPotions()
-        }
-        return this[0].getPotions() + this[1].getPotions() + this[2].getPotions() + 6
+    if (contains("x")) {
+        return replace("x", "").getPotions()
     }
-    return 0
+    return when (length) {
+        1 -> {
+            this[0].getPotions()
+        }
+        2 -> {
+            this[0].getPotions() + this[1].getPotions() + 2
+        }
+        3 -> {
+            this[0].getPotions() + this[1].getPotions() + this[2].getPotions() + 6
+        }
+        else -> 0
+    }
 }
