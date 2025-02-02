@@ -1,52 +1,15 @@
 package everybodycodes.years.y2024
 
 import everybodycodes.years.Quest
+import everybodycodes.years.readInput
 
 class Quest01 : Quest {
 
-    fun part1(): Any {
-        val lines = readInput("quest01", 2024)
-        return lines.map { line ->
-            line.map {
-                when (it) {
-                    'A' -> 0
-                    'B' -> 1
-                    'C' -> 3
-                    else -> 0
-                }
-            }.sum()
-        }.sum()
-    }
+    fun part1(): Any = solvePart(name = "quest01", chunkSize = 1)
 
-    fun part2(): Any {
-        val lines = readInput("quest01.2", 2024)
-        return lines.map { line ->
-            var r = 0
-            for (i in line.indices step 2) {
-                val a = line[i]
-                val b = line[i + 1]
-                var potions = 0
-                potions += a.getPotions() + b.getPotions()
-                if (a.isEnemy() && b.isEnemy()) {
-                    potions += 2
-                }
-                r += potions
-            }
-            return@map r
-        }.sum()
-    }
+    fun part2(): Any = solvePart(name = "quest01.2", chunkSize = 2)
 
-    fun part3(): Any {
-        val lines = readInput("quest01.3", 2024)
-        return lines.map { line ->
-            var r = 0
-            for (i in line.indices step 3) {
-                val p = "${line[i]}${line[i + 1]}${line[i + 2]}".getPotions()
-                r += p
-            }
-            return@map r
-        }.sum()
-    }
+    fun part3(): Any = solvePart(name = "quest01.3", chunkSize = 3)
 }
 
 fun main() {
@@ -54,6 +17,22 @@ fun main() {
     println(quest1.part1())
     println(quest1.part2())
     println(quest1.part3())
+}
+
+private fun solvePart(name: String, chunkSize: Int) : Int {
+    val lines = readInput(name, 2024)
+    return lines.sumOf { line ->
+        line.calculatePotions(chunkSize)
+    }
+}
+
+private fun String.calculatePotions(chunkSize: Int) : Int {
+    var result = 0
+    for (i in this.indices step chunkSize) {
+        val chunk = this.substring(i, i + chunkSize)
+        result += chunk.getPotions()
+    }
+    return result
 }
 
 private fun Char.getPotions() : Int {
@@ -64,15 +43,6 @@ private fun Char.getPotions() : Int {
         'D' -> 5
         else -> 0
     }
-}
-
-private fun Char.isEnemy(): Boolean {
-    return this in 'A'..'D'
-}
-
-private fun String.containsOtherMob(c: Char): Boolean {
-    return filter { it.isEnemy() }
-        .any { it != c }
 }
 
 private fun String.getPotions() : Int {
